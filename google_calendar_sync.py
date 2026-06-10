@@ -4,6 +4,7 @@ Synkroniserer treningsplan til Google Calendar
 
 import os
 import pickle
+import time
 from datetime import datetime, timedelta
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -120,10 +121,22 @@ def create_training_event(service, date, session, week_phase):
 
     try:
         event = service.events().insert(calendarId='primary', body=event).execute()
+        time.sleep(0.1)  # Rate limiting: 100ms mellom hver opprettelse
         return event.get('id')
     except HttpError as error:
-        print(f'Feil ved oppretting av event: {error}')
-        return None
+        if 'rateLimitExceeded' in str(error):
+            print("⚠ Rate limit - venter 2 sekunder...")
+            time.sleep(2)
+            # Prøv igjen
+            try:
+                event = service.events().insert(calendarId='primary', body=event).execute()
+                return event.get('id')
+            except:
+                print(f'Kunne ikke opprette event etter retry: {error}')
+                return None
+        else:
+            print(f'Feil ved oppretting av event: {error}')
+            return None
 
 
 def delete_existing_training_events(service):
@@ -144,11 +157,25 @@ def delete_existing_training_events(service):
 
         deleted_count = 0
         for event in events:
-            service.events().delete(
-                calendarId='primary',
-                eventId=event['id']
-            ).execute()
-            deleted_count += 1
+            try:
+                service.events().delete(
+                    calendarId='primary',
+                    eventId=event['id']
+                ).execute()
+                deleted_count += 1
+                time.sleep(0.1)  # Rate limiting: 100ms mellom hver sletting
+            except HttpError as e:
+                if 'rateLimitExceeded' in str(e):
+                    print("⚠ Rate limit - venter 2 sekunder...")
+                    time.sleep(2)
+                    # Prøv igjen
+                    service.events().delete(
+                        calendarId='primary',
+                        eventId=event['id']
+                    ).execute()
+                    deleted_count += 1
+                else:
+                    print(f'Kunne ikke slette event: {e}')
 
         return deleted_count
     except HttpError as error:
@@ -195,15 +222,21 @@ def sync_training_plan_to_calendar():
         date_str = row['Datoperiode'].split(' - ')[0]
         year = 2026
 
-        # Map dag til offset
+        # Parse første dato i perioden
+        first_date = datetime.strptime(f"{date_str}.{year}", "%d.%m.%Y")
+
+        # Finn mandag i denne uken (ISO weekday: 1=Mandag, 7=Søndag)
+        days_since_monday = first_date.weekday()  # 0=Mandag, 6=Søndag
+        week_start_monday = first_date - timedelta(days=days_since_monday)
+
+        # Map dag til offset fra mandag
         day_offset = {
             'Mandag': 0, 'Tirsdag': 1, 'Onsdag': 2,
             'Torsdag': 3, 'Fredag': 4, 'Lørdag': 5, 'Søndag': 6
         }
 
-        # Beregn faktisk dato
-        week_start = datetime.strptime(f"{date_str}.{year}", "%d.%m.%Y")
-        session_date = week_start + timedelta(days=day_offset[row['Dag']])
+        # Beregn faktisk dato for økten
+        session_date = week_start_monday + timedelta(days=day_offset[row['Dag']])
 
         # Bygg session dict
         session = {
