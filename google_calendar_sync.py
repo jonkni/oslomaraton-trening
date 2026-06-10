@@ -209,8 +209,8 @@ def sync_training_plan_to_calendar():
         session = {
             'type': row['Økttype'],
             'details': row['Detaljer'],
-            'warmup': row.get('Oppvarming', ''),
-            'bike_alt': row.get('Sykkel-alternativ', ''),
+            'warmup': row['Oppvarming'] if 'Oppvarming' in row and pd.notna(row['Oppvarming']) else '',
+            'bike_alt': row['Sykkel-alternativ'] if 'Sykkel-alternativ' in row and pd.notna(row['Sykkel-alternativ']) else '',
         }
 
         # Opprett event
