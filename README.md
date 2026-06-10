@@ -11,13 +11,26 @@ Treningsprogram for Oslo halvmaraton (12. september 2026) basert på **norsk mod
 
 ## 🚀 Kom i gang
 
-### 1. Installer Python-pakker
+### 1. Opprett virtuelt miljø (anbefalt)
+
+```bash
+# Opprett virtuelt miljø
+python3 -m venv venv
+
+# Aktiver virtuelt miljø
+source venv/bin/activate  # Mac/Linux
+# venv\Scripts\activate   # Windows
+```
+
+**Hvorfor venv?** Isolerer prosjektets pakker fra system-Python og andre prosjekter, unngår versjonskonflikter.
+
+### 2. Installer Python-pakker
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Sett opp Strava API
+### 3. Sett opp Strava API
 
 Følg instruksjonene i [STRAVA_SETUP.md](STRAVA_SETUP.md):
 
@@ -29,7 +42,7 @@ STRAVA_CLIENT_ID=ditt_client_id
 STRAVA_CLIENT_SECRET=ditt_client_secret
 ```
 
-### 3. Test Strava-tilkobling
+### 4. Test Strava-tilkobling
 
 ```bash
 python strava_auth.py
@@ -37,7 +50,7 @@ python strava_auth.py
 
 Dette vil åpne en nettleser for autentisering. Logg inn og godkjenn tilgang.
 
-### 4. Hent og analyser treningsdata
+### 5. Hent og analyser treningsdata
 
 ```bash
 python fetch_strava_data.py
@@ -45,7 +58,7 @@ python fetch_strava_data.py
 
 Dette viser en oppsummering av din nåværende treningsstatus.
 
-### 5. Generer treningsplan
+### 6. Generer treningsplan
 
 ```bash
 python training_plan.py

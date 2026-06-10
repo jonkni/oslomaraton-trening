@@ -2,11 +2,21 @@
 
 Kom i gang på 5 minutter! ⚡
 
-## Steg 1: Installer pakker (30 sek)
+## Steg 1: Opprett virtuelt miljø og installer pakker (1 min)
 
 ```bash
+# Opprett virtuelt miljø
+python3 -m venv venv
+
+# Aktiver virtuelt miljø
+source venv/bin/activate  # På Mac/Linux
+# venv\Scripts\activate   # På Windows
+
+# Installer pakker
 pip install -r requirements.txt
 ```
+
+**Tips:** Når du åpner en ny terminal senere, husk å aktivere venv først med `source venv/bin/activate`
 
 ## Steg 2: Opprett Strava API App (2 min)
 
