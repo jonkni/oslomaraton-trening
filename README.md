@@ -154,7 +154,9 @@ Under ferien i Grenada:
 
 Programmet genererer:
 - `strava_activities.csv` - Alle aktiviteter fra Strava
-- `treningsplan_oslo_halvmaraton.csv` - Detaljert ukesplan
+- `treningsplan_oslo_halvmaraton.csv` - Detaljert ukesplan (inkl. oppvarming og sykkelalternativ)
+- `treningsprogresjon.png` - Graf over historisk progresjon
+- `treningsplan_periodisering.png` - Periodiseringsplan
 
 ## ⚠️ Viktige hensyn
 
