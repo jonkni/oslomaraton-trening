@@ -74,6 +74,24 @@ Dette lager et detaljert ukentlig treningsprogram basert på:
 - Grenada-perioden med varme/bakker
 - Opptrapping mot 12. september
 
+**NY:** Hver økt inkluderer nå:
+- 🔥 **Oppvarming** for nøkkeløkter
+- 🚴 **Sykkelalternativ** (hvis kne betendt/hovent)
+
+### 7. Synkroniser til Google Calendar (valgfritt)
+
+```bash
+python google_calendar_sync.py
+```
+
+Første gang må du sette opp Google Calendar API - se [GOOGLE_CALENDAR_SETUP.md](GOOGLE_CALENDAR_SETUP.md).
+
+Dette vil:
+- Slette gamle treningsøkter fra kalenderen
+- Opprette nye økter med alle detaljer
+- Sette påminnelser (1 time før)
+- Automatisk oppdatere hvis du endrer planen
+
 ## 📊 Hva programmet gjør
 
 ### Analyserer din nåværende form

@@ -200,25 +200,25 @@ class TrainingPlanGenerator:
         if phase == "Nedtrapping":
             # Nedtrapping - reduser volum og intensitet
             sessions = [
-                {"day": "Mandag", "type": "Hvile", "details": "Hviledag"},
-                {"day": "Tirsdag", "type": "Rolig", "details": f"40 min rolig @ {pace_str(easy_pace)}"},
-                {"day": "Onsdag", "type": "Tempo", "details": f"30 min inkl. 3x5 min @ {pace_str(threshold_pace)}"},
-                {"day": "Torsdag", "type": "Rolig", "details": f"30 min rolig"},
-                {"day": "Fredag", "type": "Hvile", "details": "Hviledag"},
-                {"day": "Lørdag", "type": "Lang", "details": f"60-70 min @ {pace_str(easy_pace + 0.1)} (race preview)"},
-                {"day": "Søndag", "type": "Hvile/lett", "details": "Hviledag eller 20-30 min lett"},
+                {"day": "Mandag", "type": "Hvile", "details": "Hviledag", "warmup": "", "bike_alt": "Hviledag"},
+                {"day": "Tirsdag", "type": "Rolig", "details": f"40 min rolig @ {pace_str(easy_pace)}", "warmup": "10 min lett jogg", "bike_alt": "45 min rolig sykkel (zone 2)"},
+                {"day": "Onsdag", "type": "Tempo", "details": f"30 min inkl. 3x5 min @ {pace_str(threshold_pace)}", "warmup": "15 min rolig + 3x100m strides", "bike_alt": "40 min sykkel: 10 min oppvarming, 3x5 min @ terskel, 10 min nedjogg"},
+                {"day": "Torsdag", "type": "Rolig", "details": f"30 min rolig", "warmup": "5 min lett jogg", "bike_alt": "35 min rolig sykkel (zone 2)"},
+                {"day": "Fredag", "type": "Hvile", "details": "Hviledag", "warmup": "", "bike_alt": "Hviledag"},
+                {"day": "Lørdag", "type": "Lang", "details": f"60-70 min @ {pace_str(easy_pace + 0.1)} (race preview)", "warmup": "10 min lett jogg", "bike_alt": "90 min rolig sykkel (zone 2)"},
+                {"day": "Søndag", "type": "Hvile/lett", "details": "Hviledag eller 20-30 min lett", "warmup": "", "bike_alt": "30 min lett sykkel eller hvile"},
             ]
 
         elif in_grenada:
             # Grenada - tilpass til varme, kupert terreng
             sessions = [
-                {"day": "Mandag", "type": "Hvile", "details": "Hviledag - akklimatisering"},
-                {"day": "Tirsdag", "type": "Fartlek", "details": f"40 min fartlek (korte stigninger) - TIDLIG MORGEN"},
-                {"day": "Onsdag", "type": "Rolig", "details": f"30 min rolig @ {pace_str(easy_pace + 0.2)} - tilpass til varme"},
-                {"day": "Torsdag", "type": "Bakkeintervaller", "details": "30 min inkl. 6-8x1 min bakke"},
-                {"day": "Fredag", "type": "Hvile", "details": "Hviledag"},
-                {"day": "Lørdag", "type": "Lang", "details": f"60-80 min rolig i kupert terreng - TIDLIG MORGEN"},
-                {"day": "Søndag", "type": "Rolig/svømming", "details": "30 min lett jogg eller svømming for restitusjon"},
+                {"day": "Mandag", "type": "Hvile", "details": "Hviledag - akklimatisering", "warmup": "", "bike_alt": "Hviledag"},
+                {"day": "Tirsdag", "type": "Fartlek", "details": f"40 min fartlek (korte stigninger) - TIDLIG MORGEN", "warmup": "10 min lett jogg", "bike_alt": "50 min sykkel: inkl. 8-10x1 min hard i bakke"},
+                {"day": "Onsdag", "type": "Rolig", "details": f"30 min rolig @ {pace_str(easy_pace + 0.2)} - tilpass til varme", "warmup": "5 min lett jogg", "bike_alt": "35 min rolig sykkel"},
+                {"day": "Torsdag", "type": "Bakkeintervaller", "details": "30 min inkl. 6-8x1 min bakke", "warmup": "15 min rolig + 3x100m strides", "bike_alt": "40 min sykkel: 6-8x1 min hard i bakke"},
+                {"day": "Fredag", "type": "Hvile", "details": "Hviledag", "warmup": "", "bike_alt": "Hviledag"},
+                {"day": "Lørdag", "type": "Lang", "details": f"60-80 min rolig i kupert terreng - TIDLIG MORGEN", "warmup": "10 min lett jogg", "bike_alt": "90-110 min rolig sykkel (kupert rute)"},
+                {"day": "Søndag", "type": "Rolig/svømming", "details": "30 min lett jogg eller svømming for restitusjon", "warmup": "", "bike_alt": "30 min lett sykkel eller svømming"},
             ]
 
         else:
@@ -228,13 +228,20 @@ class TrainingPlanGenerator:
             threshold_2 = "30 min" if phase != "Peak" else "40 min"
 
             sessions = [
-                {"day": "Mandag", "type": "Rolig", "details": f"40-50 min rolig @ {pace_str(easy_pace)}"},
-                {"day": "Tirsdag", "type": "Terskel", "details": f"{threshold_1} @ {pace_str(threshold_pace)} (2-3 min pause)"},
-                {"day": "Onsdag", "type": "Rolig", "details": f"40-50 min rolig @ {pace_str(easy_pace)}"},
-                {"day": "Torsdag", "type": "Tempo/Terskel", "details": f"{threshold_2} @ {pace_str(threshold_pace - 0.05)}"},
-                {"day": "Fredag", "type": "Hvile/lett", "details": "Hviledag eller 30 min lett"},
-                {"day": "Lørdag", "type": "Langtur", "details": f"{long_run_km:.0f}-{long_run_km+2:.0f} km @ {pace_str(easy_pace)}"},
-                {"day": "Søndag", "type": "Rolig", "details": f"50-60 min rolig @ {pace_str(easy_pace + 0.1)}"},
+                {"day": "Mandag", "type": "Rolig", "details": f"40-50 min rolig @ {pace_str(easy_pace)}",
+                 "warmup": "10 min lett jogg", "bike_alt": "50-60 min rolig sykkel (zone 2)"},
+                {"day": "Tirsdag", "type": "Terskel", "details": f"{threshold_1} @ {pace_str(threshold_pace)} (2-3 min pause)",
+                 "warmup": "15 min rolig + 4x100m strides + 5 min pause", "bike_alt": f"60 min sykkel: 15 min oppvarming, {threshold_1} @ terskel (2-3 min lett mellom), 10 min nedjogg"},
+                {"day": "Onsdag", "type": "Rolig", "details": f"40-50 min rolig @ {pace_str(easy_pace)}",
+                 "warmup": "10 min lett jogg", "bike_alt": "50-60 min rolig sykkel (zone 2)"},
+                {"day": "Torsdag", "type": "Tempo/Terskel", "details": f"{threshold_2} @ {pace_str(threshold_pace - 0.05)}",
+                 "warmup": "15 min rolig + 4x100m strides", "bike_alt": f"50 min sykkel: 15 min oppvarming, {threshold_2} @ terskel, 10 min nedjogg"},
+                {"day": "Fredag", "type": "Hvile/lett", "details": "Hviledag eller 30 min lett",
+                 "warmup": "", "bike_alt": "30 min lett sykkel eller hvile"},
+                {"day": "Lørdag", "type": "Langtur", "details": f"{long_run_km:.0f}-{long_run_km+2:.0f} km @ {pace_str(easy_pace)}",
+                 "warmup": "10 min lett jogg", "bike_alt": f"{int(long_run_km * 7)}-{int((long_run_km+2) * 7)} min rolig sykkel (zone 2)"},
+                {"day": "Søndag", "type": "Rolig", "details": f"50-60 min rolig @ {pace_str(easy_pace + 0.1)}",
+                 "warmup": "10 min lett jogg", "bike_alt": "60-70 min rolig sykkel (zone 2)"},
             ]
 
             # Legg til intervalluke hver 3. uke
@@ -296,6 +303,7 @@ class TrainingPlanGenerator:
 
         print(f"\n⚠ VIKTIGE HENSYN:")
         print("   • Comeback etter kneskade (mai 2025) - lytt til kroppen!")
+        print("   • 🚴 Kne betendt/hovent? Bruk sykkelalternativet for økten")
         print("   • Grenada 22. juni - 19. juli: Redusert volum, tilpass til varme")
         print("   • Positiv split på 2TL: Fokus på jevn innsats i terreng/varme")
 
@@ -311,6 +319,10 @@ class TrainingPlanGenerator:
 
             for session in week['sessions']:
                 print(f"  {session['day']:10s} | {session['type']:15s} | {session['details']}")
+                if session.get('warmup'):
+                    print(f"              {'':15s}   🔥 Oppvarming: {session['warmup']}")
+                if session.get('bike_alt'):
+                    print(f"              {'':15s}   🚴 Sykkel alt: {session['bike_alt']}")
 
             if week['notes']:
                 print(f"\n  📝 Notater:")
@@ -373,6 +385,8 @@ def main():
                 'Dag': session['day'],
                 'Økttype': session['type'],
                 'Detaljer': session['details'],
+                'Oppvarming': session.get('warmup', ''),
+                'Sykkel-alternativ': session.get('bike_alt', ''),
             })
 
     df_plan = pd.DataFrame(rows)

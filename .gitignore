@@ -5,6 +5,10 @@
 # Strava tokens
 .strava_token
 
+# Google Calendar credentials
+credentials.json
+token.pickle
+
 # Python
 __pycache__/
 *.py[cod]

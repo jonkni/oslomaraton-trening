@@ -29,19 +29,19 @@ class StravaAuthHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
-            self.wfile.write(b"""
+            self.wfile.write("""
                 <html>
                 <body>
                     <h1>Autentisering vellykket!</h1>
                     <p>Du kan lukke dette vinduet og gå tilbake til terminalen.</p>
                 </body>
                 </html>
-            """)
+            """.encode('utf-8'))
         else:
             self.send_response(400)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
-            self.wfile.write(b"<html><body><h1>Feil ved autentisering</h1></body></html>")
+            self.wfile.write("<html><body><h1>Feil ved autentisering</h1></body></html>".encode('utf-8'))
 
     def log_message(self, format, *args):
         """Suppress log messages"""
