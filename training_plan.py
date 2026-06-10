@@ -37,7 +37,7 @@ class TrainingPlanGenerator:
 
         Norsk modell fokuserer på:
         - Anaerob terskel (AT) / "laktatterskel"
-        - Double threshold (2x terskel per uke)
+        - 2x terskeltrening per uke (tirsdag + torsdag)
         - Lange rolige løp
         - Litt hurtigere arbeid (kortintervaller)
 
@@ -295,9 +295,9 @@ class TrainingPlanGenerator:
         print(f"   (Tidligere beste: 1:38 - du er på god vei tilbake!)")
 
         print(f"\n📊 NØKKELPRINSIPPER (Norsk modell):")
-        print("   • 2x terskeltrening per uke (Tuesday + Thursday)")
+        print("   • 2x terskeltrening per uke (tirsdag + torsdag)")
         print("   • Lang rolig løp på lørdag (30-35% av ukevolum)")
-        print("   • Rolig grunntrening mellom")
+        print("   • Rolig grunntrening mellom (60-70% av ukevolum)")
         print("   • Periodiske intervaller (800m-1000m)")
         print("   • Nedtrapping 2 uker før løp")
 

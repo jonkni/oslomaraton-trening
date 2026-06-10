@@ -125,7 +125,7 @@ Tar hensyn til:
 
 Basert på Marius Bakkens filosofi:
 
-1. **Double threshold:** 2x terskeltrening per uke (tirsdag + torsdag)
+1. **Terskeltrening:** 2x terskeltrening per uke (tirsdag + torsdag)
 2. **Lang rolig:** Langtur lørdag (30-35% av ukevolum)
 3. **Rolig grunntrening:** 60-70% av treningen skal være rolig
 4. **Periodisering:** Oppbygging → volum → kvalitet → nedtrapping
