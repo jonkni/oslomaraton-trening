@@ -1,6 +1,10 @@
-# Oslo Halvmaraton - Treningsplanlegger
+<div align="center">
+  <img src="oslomaraton-trening-logo.png" alt="Oslo Halvmaraton Treningsplanlegger" width="200"/>
+  
+  # Oslo Halvmaraton - Treningsplanlegger
 
-Treningsprogram for Oslo halvmaraton (12. september 2026) basert på **norsk modell** (Marius Bakken) og dine Strava-data.
+  Treningsprogram for Oslo halvmaraton (12. september 2026) basert på **norsk modell** (Marius Bakken) og dine Strava-data.
+</div>
 
 ## 🎯 Mål
 
