@@ -37,6 +37,9 @@ cat > .env << 'EOF'
 STRAVA_CLIENT_ID=DITT_CLIENT_ID_HER
 STRAVA_CLIENT_SECRET=DITT_CLIENT_SECRET_HER
 EOF
+
+# Beskytt filen
+chmod 600 .env
 ```
 
 **VIKTIG:** Erstatt `DITT_CLIENT_ID_HER` og `DITT_CLIENT_SECRET_HER` med verdiene fra Strava!

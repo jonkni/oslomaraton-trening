@@ -29,9 +29,15 @@ cat > .env << 'EOF'
 STRAVA_CLIENT_ID=DIN_CLIENT_ID
 STRAVA_CLIENT_SECRET=DIN_CLIENT_SECRET
 EOF
+
+# Beskytt filen (kun du kan lese/skrive)
+chmod 600 .env
 ```
 
-Erstatt `DIN_CLIENT_ID` og `DIN_CLIENT_SECRET` med de faktiske verdiene.
+**VIKTIG - Sikkerhet:**
+- Erstatt `DIN_CLIENT_ID` og `DIN_CLIENT_SECRET` med de faktiske verdiene
+- `chmod 600` sikrer at kun du har tilgang til filen
+- `.env` er allerede i `.gitignore` så den blir ALDRI committet til git
 
 ## Steg 4: Første gangs autentisering
 
