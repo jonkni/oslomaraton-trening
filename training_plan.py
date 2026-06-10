@@ -40,17 +40,26 @@ class TrainingPlanGenerator:
         - Double threshold (2x terskel per uke)
         - Lange rolige løp
         - Litt hurtigere arbeid (kortintervaller)
+
+        Bruker race-paces fra Sentrumsløpet 10km (4:58/km) som baseline
         """
-        # Basert på siste 4 ukers gjennomsnittspace
-        avg_pace = self.current_fitness['last_4_weeks']['avg_pace']
+        # Sentrumsløpet 10km: 50:00 (4:58/km) - beste indikator på nåværende form
+        race_10k_pace = 4.97  # 4:58 min/km
+
+        # Beregn halvmaraton race pace fra 10k (Riegel formel + Oslo profil)
+        # 10k @ 4:58 -> HM @ ca 5:12-5:15 (flatt)
+        # Oslo HM (+145m) -> +10-12 sek/km -> 5:22-5:27
+        # Comeback-justering (konservativ) -> 5:12/km målpace (realistisk)
+
+        race_pace_hm = 5.20  # 5:12/km - realistisk mål med god trening
 
         paces = {
-            'easy': avg_pace + 0.5,  # Rolig grunntrening (30-45 sek/km langsommere enn AT)
-            'long_run': avg_pace + 0.3,  # Lang rolig
-            'threshold': avg_pace - 0.15,  # Terskel/laktat (ca. halvmaraton-pace + 10-15 sek)
-            'tempo': avg_pace - 0.25,  # Tempo (litt raskere enn terskel)
-            'interval': avg_pace - 0.45,  # 5k-pace for intervaller
-            'race_pace_hm': avg_pace - 0.05,  # Estimert halvmaraton race pace
+            'easy': race_pace_hm + 1.0,  # Rolig grunntrening (60 sek/km langsommere)
+            'long_run': race_pace_hm + 0.7,  # Lang rolig (ca 6:00/km)
+            'threshold': race_pace_hm + 0.15,  # Terskel (5:27/km - halvmaraton pace + 15 sek)
+            'tempo': race_pace_hm,  # Tempo = race pace (5:12/km)
+            'interval': race_10k_pace,  # 10k race pace for intervaller (4:58/km)
+            'race_pace_hm': race_pace_hm,  # Målpace halvmaraton (5:12/km)
         }
 
         return paces
@@ -58,40 +67,39 @@ class TrainingPlanGenerator:
     def estimate_race_time(self):
         """
         Estimer halvmaraton-tid basert på:
-        - Nåværende form
-        - Treningsprogresjon
+        - 10k race: 50:00 (Sentrumsløpet april 2026)
+        - Riegel formel for halvmaraton-prediksjon
         - Løypeprofil (145m stigning)
         - Tidligere beste (1:38)
-        - Kneskade i mai 2025
+        - Kneskade i mai 2025 (13 måneder siden)
         """
-        # Baseline fra nåværende pace
-        current_hm_pace = self.threshold_paces['race_pace_hm']
+        # Baseline: 10k på 50:00 predikerer HM på flat løype
+        # Riegel: T2 = T1 * (D2/D1)^1.06
+        # HM fra 10k @ 50min: ~1:50 (5:12/km) optimalt
 
-        # Juster for progresjon (antar 2-3% forbedring over 14 uker)
-        weeks_to_train = self.weeks_to_race
-        progression_factor = 0.97 if weeks_to_train >= 12 else 0.98
-
-        # Juster for høyde (145m på halvmaraton = ca. 1-2 min ekstra)
-        elevation_penalty_minutes = 1.5
-
-        # Juster for comeback etter skade (vær konservativ)
-        injury_factor = 1.02  # 2% langsommere enn full kapasitet
-
-        # Beregn estimert pace
-        estimated_pace = current_hm_pace * progression_factor * injury_factor
-
-        # Beregn tid
+        race_pace_hm = self.threshold_paces['race_pace_hm']  # 5:12/km
         distance_km = 21.0975
-        time_minutes = (estimated_pace * distance_km) + elevation_penalty_minutes
 
-        # Scenarioer
+        # Scenarioer basert på treningsprogresjon
+        # Optimistisk: Perfekt trening, god dag -> nær 10k-prediksjon
+        optimistic_pace = 5.03  # 1:46 (nær flatt HM prediksjon)
+        optimistic_time = (optimistic_pace * distance_km) + 2  # +2 min for høyde
+
+        # Realistisk: God trening, normal dag -> race pace mål
+        realistic_pace = race_pace_hm  # 5:12/km
+        realistic_time = (realistic_pace * distance_km) + 2.5  # +2.5 min for høyde
+
+        # Konservativt: Trygt comeback-mål
+        conservative_pace = 5.43  # 1:55/km
+        conservative_time = conservative_pace * distance_km
+
         scenarios = {
-            'conservative': time_minutes + 3,  # Konservativt mål
-            'realistic': time_minutes,  # Realistisk ved god dag
-            'optimistic': time_minutes - 3,  # Optimistisk ved perfekt dag
+            'optimistic': optimistic_time,
+            'realistic': realistic_time,
+            'conservative': conservative_time,
         }
 
-        return scenarios, estimated_pace
+        return scenarios, race_pace_hm
 
     def generate_plan(self):
         """Generer ukentlig treningsplan"""
@@ -272,11 +280,12 @@ class TrainingPlanGenerator:
         # Tidsmål
         scenarios, pace = self.estimate_race_time()
         print(f"\n🎯 ESTIMERTE TIDSMÅL:")
-        print(f"   Konservativt: {int(scenarios['conservative']//60)}:{int(scenarios['conservative']%60):02d}")
-        print(f"   Realistisk:   {int(scenarios['realistic']//60)}:{int(scenarios['realistic']%60):02d} ⭐")
-        print(f"   Optimistisk:  {int(scenarios['optimistic']//60)}:{int(scenarios['optimistic']%60):02d}")
+        print(f"   Optimistisk:  {int(scenarios['optimistic']//60)}:{int(scenarios['optimistic']%60):02d} (5:02/km)")
+        print(f"   Realistisk:   {int(scenarios['realistic']//60)}:{int(scenarios['realistic']%60):02d} ⭐ (5:12/km)")
+        print(f"   Konservativt: {int(scenarios['conservative']//60)}:{int(scenarios['conservative']%60):02d} (5:26/km)")
         print(f"\n   Målpace: {int(pace)}:{int((pace % 1) * 60):02d} min/km")
-        print(f"   (Tidligere beste: 1:38, men post-kneskade så vær konservativ)")
+        print(f"   (Basert på 10k @ 50:00 i Sentrumsløpet, justert for Oslo-profil)")
+        print(f"   (Tidligere beste: 1:38 - du er på god vei tilbake!)")
 
         print(f"\n📊 NØKKELPRINSIPPER (Norsk modell):")
         print("   • 2x terskeltrening per uke (Tuesday + Thursday)")
