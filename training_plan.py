@@ -105,16 +105,25 @@ class TrainingPlanGenerator:
         """Generer ukentlig treningsplan"""
 
         plan = []
-        current_week_start = self.today
+
+        # Start på mandagen i inneværende uke (ikke dagens dato)
+        days_since_monday = self.today.weekday()  # 0=Mandag, 6=Søndag
+        current_week_start = self.today - timedelta(days=days_since_monday)
 
         for week_num in range(1, self.weeks_to_race + 1):
             week_end = current_week_start + timedelta(days=7)
 
-            # Sjekk om uken overlapper med Grenada
-            in_grenada = (
-                (current_week_start <= self.grenada_end) and
-                (week_end >= self.grenada_start)
-            )
+            # Sjekk om mesteparten av uken (>3 dager) er i Grenada
+            # Beregn hvor mange dager som overlapper
+            overlap_start = max(current_week_start, self.grenada_start)
+            overlap_end = min(week_end, self.grenada_end)
+
+            if overlap_start < overlap_end:
+                days_in_grenada = (overlap_end - overlap_start).days
+            else:
+                days_in_grenada = 0
+
+            in_grenada = days_in_grenada > 3
 
             week_plan = self._generate_week(
                 week_num=week_num,
