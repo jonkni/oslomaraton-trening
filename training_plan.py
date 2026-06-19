@@ -232,7 +232,17 @@ class TrainingPlanGenerator:
 
         else:
             # Normal treningsuke (norsk modell)
-            long_run_km = weekly_km * 0.35  # 35% av ukevolum
+            # Langtur basert på fase (ikke bare % av ukevolum)
+            # Bruker er vant til 15-20 km langturer
+            if phase == "Oppbygging":
+                long_run_km = 14  # Start moderat
+            elif phase == "Base/Volum":
+                long_run_km = 17  # Øk gradvis
+            elif phase == "Peak":
+                long_run_km = 19  # Peak langtur
+            else:  # Nedtrapping
+                long_run_km = 13  # Reduser
+
             threshold_1 = "2x10 min" if phase == "Oppbygging" else "3x10 min"
             threshold_2 = "30 min" if phase != "Peak" else "40 min"
 
