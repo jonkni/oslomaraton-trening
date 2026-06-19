@@ -50,6 +50,23 @@ Hvis du vil unngå "test user"-begrensningen:
 
 ## Andre vanlige feil
 
+### "invalid_grant: Bad Request" / "RefreshError"
+
+```
+google.auth.exceptions.RefreshError: ('invalid_grant: Bad Request', ...)
+```
+
+**Årsak:** Google token er utløpt eller ugyldig.
+
+**Løsning:**
+```bash
+# Slett utløpt token
+rm token.pickle
+
+# Kjør synkronisering på nytt (vil åpne nettleser for re-autentisering)
+python google_calendar_sync.py
+```
+
 ### "Invalid client" / "Client ID not found"
 - Sjekk at `credentials.json` er riktig lastet ned
 - Sjekk at du bruker riktig prosjekt i Google Cloud Console
@@ -62,3 +79,8 @@ Hvis du vil unngå "test user"-begrensningen:
 - Gå til **APIs & Services** → **Library**
 - Søk etter "Google Calendar API"
 - Klikk **Enable**
+
+### "Rate Limit Exceeded"
+- Scriptet har innebygd rate limiting (100ms mellom kall)
+- Hvis du fortsatt treffer limit, vent 1-2 minutter og prøv igjen
+- Google Calendar API har grense på ~10 requests/sekund
